@@ -1,0 +1,1063 @@
+{
+  "resourceType": "MeasureReport",
+  "id": "CSVExportExample",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/saner/StructureDefinition/PublicHealthMeasureReport"
+    ]
+  },
+  "type": "summary",
+  "status": "complete",
+  "measure": "http://hl7.org/fhir/uv/saner/Measure/FEMADailyHospitalCOVID19Reporting",
+  "subject": {
+    "identifier": {
+      "system": "https://www.census.gov/geographies",
+      "value": "34"
+    },
+    "reference": "Location/states-NJ",
+    "display": "State of New Jersey"
+  },
+  "identifier": [
+    {
+      "system": "urn:ietf:rfc:3986",
+      "value": "urn:uuid:375c3957-9219-11ea-1863-09173f13e4c5"
+    }
+  ],
+  "date": "2020-04-04",
+  "period": {
+    "start": "2020-04-04",
+    "end": "2020-04-04"
+  },
+  "group": [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "positiveIncreasePercent",
+            "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasureGroupSystem"
+          }
+        ]
+      },
+      "population": [
+        {
+          "code": {
+            "coding": [
+              {
+                "code": "totalOrdersIncrease",
+                "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+              },
+              {
+                "code": "initial-population",
+                "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+              }
+            ]
+          },
+          "_count": {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+                "valueCode": "unsupported"
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "code": "totalTestResultsIncrease",
+                "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+              },
+              {
+                "code": "denominator",
+                "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+              }
+            ]
+          },
+          "count": 7853
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "code": "positiveIncrease",
+                "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+              },
+              {
+                "code": "numerator",
+                "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+              }
+            ]
+          },
+          "count": 4229
+        }
+      ],
+      "measureScore": {
+        "value": 53.85,
+        "unit": "%",
+        "code": "%",
+        "system": "http://unitsofmeasure.org"
+      },
+      "stratifier": [
+        {
+          "code": [
+            {
+              "coding": [
+                {
+                  "code": "age+gender",
+                  "system": "http://example.com/foo"
+                }
+              ]
+            }
+          ],
+          "stratum": [
+            {
+              "component": [
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "age",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "coding": [
+                      {
+                        "code": "pediatric",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "gender",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "coding": [
+                      {
+                        "code": "female",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "population": [
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "totalOrdersIncrease",
+                        "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+                      },
+                      {
+                        "code": "initial-population",
+                        "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+                      }
+                    ]
+                  },
+                  "_count": {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+                        "valueCode": "unsupported"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "totalTestResultsIncrease",
+                        "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+                      },
+                      {
+                        "code": "denominator",
+                        "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+                      }
+                    ]
+                  },
+                  "count": 938
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "positiveIncrease",
+                        "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+                      },
+                      {
+                        "code": "numerator",
+                        "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+                      }
+                    ]
+                  },
+                  "count": 538
+                }
+              ],
+              "measureScore": {
+                "value": 57.36,
+                "unit": "%",
+                "code": "%",
+                "system": "http://unitsofmeasure.org"
+              }
+            },
+            {
+              "component": [
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "age",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "coding": [
+                      {
+                        "code": "pediatric",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "gender",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "coding": [
+                      {
+                        "code": "male",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "population": [
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "totalOrdersIncrease",
+                        "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+                      },
+                      {
+                        "code": "initial-population",
+                        "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+                      }
+                    ]
+                  },
+                  "_count": {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+                        "valueCode": "unsupported"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "totalTestResultsIncrease",
+                        "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+                      },
+                      {
+                        "code": "denominator",
+                        "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+                      }
+                    ]
+                  },
+                  "count": 919
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "positiveIncrease",
+                        "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+                      },
+                      {
+                        "code": "numerator",
+                        "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+                      }
+                    ]
+                  },
+                  "count": 498
+                }
+              ],
+              "measureScore": {
+                "value": 54.19,
+                "unit": "%",
+                "code": "%",
+                "system": "http://unitsofmeasure.org"
+              }
+            },
+            {
+              "component": [
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "age",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "coding": [
+                      {
+                        "code": "adult",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "gender",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "coding": [
+                      {
+                        "code": "female",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "population": [
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "totalOrdersIncrease",
+                        "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+                      },
+                      {
+                        "code": "initial-population",
+                        "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+                      }
+                    ]
+                  },
+                  "_count": {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+                        "valueCode": "unsupported"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "totalTestResultsIncrease",
+                        "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+                      },
+                      {
+                        "code": "denominator",
+                        "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+                      }
+                    ]
+                  },
+                  "count": 2987
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "positiveIncrease",
+                        "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+                      },
+                      {
+                        "code": "numerator",
+                        "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+                      }
+                    ]
+                  },
+                  "count": 1671
+                }
+              ],
+              "measureScore": {
+                "value": 55.94,
+                "unit": "%",
+                "code": "%",
+                "system": "http://unitsofmeasure.org"
+              }
+            },
+            {
+              "component": [
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "age",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "coding": [
+                      {
+                        "code": "adult",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "gender",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "coding": [
+                      {
+                        "code": "male",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "population": [
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "totalOrdersIncrease",
+                        "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+                      },
+                      {
+                        "code": "initial-population",
+                        "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+                      }
+                    ]
+                  },
+                  "_count": {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+                        "valueCode": "unsupported"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "totalTestResultsIncrease",
+                        "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+                      },
+                      {
+                        "code": "denominator",
+                        "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+                      }
+                    ]
+                  },
+                  "count": 2739
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "positiveIncrease",
+                        "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+                      },
+                      {
+                        "code": "numerator",
+                        "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+                      }
+                    ]
+                  },
+                  "count": 1522
+                }
+              ],
+              "measureScore": {
+                "value": 55.57,
+                "unit": "%",
+                "code": "%",
+                "system": "http://unitsofmeasure.org"
+              }
+            }
+          ]
+        },
+        {
+          "code": [
+            {
+              "coding": [
+                {
+                  "code": "race+ethnicity",
+                  "system": "http://example.com/foo"
+                }
+              ]
+            }
+          ],
+          "stratum": [
+            {
+              "component": [
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "race",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "coding": [
+                      {
+                        "code": "race-1",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "ethnicity",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "coding": [
+                      {
+                        "code": "ethnicity-1",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "population": [
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "totalOrdersIncrease",
+                        "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+                      },
+                      {
+                        "code": "initial-population",
+                        "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+                      }
+                    ]
+                  },
+                  "_count": {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+                        "valueCode": "unsupported"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "totalTestResultsIncrease",
+                        "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+                      },
+                      {
+                        "code": "denominator",
+                        "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+                      }
+                    ]
+                  },
+                  "count": 923
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "positiveIncrease",
+                        "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+                      },
+                      {
+                        "code": "numerator",
+                        "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+                      }
+                    ]
+                  },
+                  "count": 557
+                }
+              ],
+              "measureScore": {
+                "value": 60.35,
+                "unit": "%",
+                "code": "%",
+                "system": "http://unitsofmeasure.org"
+              }
+            },
+            {
+              "component": [
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "race",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "coding": [
+                      {
+                        "code": "race-1",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "ethnicity",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "coding": [
+                      {
+                        "code": "ethnicity-2",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "population": [
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "totalOrdersIncrease",
+                        "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+                      },
+                      {
+                        "code": "initial-population",
+                        "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+                      }
+                    ]
+                  },
+                  "_count": {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+                        "valueCode": "unsupported"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "totalTestResultsIncrease",
+                        "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+                      },
+                      {
+                        "code": "denominator",
+                        "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+                      }
+                    ]
+                  },
+                  "count": 970
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "positiveIncrease",
+                        "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+                      },
+                      {
+                        "code": "numerator",
+                        "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+                      }
+                    ]
+                  },
+                  "count": 555
+                }
+              ],
+              "measureScore": {
+                "value": 57.22,
+                "unit": "%",
+                "code": "%",
+                "system": "http://unitsofmeasure.org"
+              }
+            },
+            {
+              "component": [
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "race",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "coding": [
+                      {
+                        "code": "race-2",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "ethnicity",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "coding": [
+                      {
+                        "code": "ethnicity-1",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "population": [
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "totalOrdersIncrease",
+                        "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+                      },
+                      {
+                        "code": "initial-population",
+                        "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+                      }
+                    ]
+                  },
+                  "_count": {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+                        "valueCode": "unsupported"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "totalTestResultsIncrease",
+                        "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+                      },
+                      {
+                        "code": "denominator",
+                        "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+                      }
+                    ]
+                  },
+                  "count": 2649
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "positiveIncrease",
+                        "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+                      },
+                      {
+                        "code": "numerator",
+                        "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+                      }
+                    ]
+                  },
+                  "count": 1503
+                }
+              ],
+              "measureScore": {
+                "value": 56.74,
+                "unit": "%",
+                "code": "%",
+                "system": "http://unitsofmeasure.org"
+              }
+            },
+            {
+              "component": [
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "race",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "coding": [
+                      {
+                        "code": "race-2",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "ethnicity",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "coding": [
+                      {
+                        "code": "ethnicity-2",
+                        "system": "http://example.com/foo"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "population": [
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "totalOrdersIncrease",
+                        "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+                      },
+                      {
+                        "code": "initial-population",
+                        "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+                      }
+                    ]
+                  },
+                  "_count": {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+                        "valueCode": "unsupported"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "totalTestResultsIncrease",
+                        "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+                      },
+                      {
+                        "code": "denominator",
+                        "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+                      }
+                    ]
+                  },
+                  "count": 3041
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "code": "positiveIncrease",
+                        "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+                      },
+                      {
+                        "code": "numerator",
+                        "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+                      }
+                    ]
+                  },
+                  "count": 1614
+                }
+              ],
+              "measureScore": {
+                "value": 53.07,
+                "unit": "%",
+                "code": "%",
+                "system": "http://unitsofmeasure.org"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "positivePercent",
+            "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasureGroupSystem"
+          }
+        ]
+      },
+      "population": [
+        {
+          "code": {
+            "coding": [
+              {
+                "code": "totalOrders",
+                "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+              },
+              {
+                "code": "initial-population",
+                "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+              }
+            ]
+          },
+          "_count": {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+                "valueCode": "unsupported"
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "code": "rejected",
+                "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+              },
+              {
+                "code": "denominator-exclusion",
+                "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+              }
+            ]
+          },
+          "_count": {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+                "valueCode": "unsupported"
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "code": "totalTestResults",
+                "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+              },
+              {
+                "code": "denominator",
+                "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+              }
+            ]
+          },
+          "count": 75356
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "code": "positive",
+                "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+              },
+              {
+                "code": "numerator",
+                "system": "http://terminology.hl7.org/CodeSystem/measure-population"
+              }
+            ]
+          },
+          "count": 34124
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "code": "allReports",
+                "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+              }
+            ],
+            "text": "All Laboratory Reports for any Order"
+          },
+          "_count": {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+                "valueCode": "unsupported"
+              }
+            ]
+          }
+        },
+        {
+          "code": {
+            "coding": [
+              {
+                "code": "latestReports",
+                "system": "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+              }
+            ],
+            "text": "Most Recent Laboratory Reports for any Order"
+          },
+          "_count": {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+                "valueCode": "unsupported"
+              }
+            ]
+          }
+        }
+      ],
+      "measureScore": {
+        "value": 45.28,
+        "unit": "%",
+        "code": "%",
+        "system": "http://unitsofmeasure.org"
+      }
+    }
+  ]
+}
