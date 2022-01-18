@@ -1,0 +1,10 @@
+stratifier,gender,race,ethnicity,totalOrdersIncrease,totalTestResultsIncrease,positiveIncrease,positiveIncreasePercent,totalOrders,rejected,totalTestResults,positive,allReports,latestReports,positivePercent
+,,,,unsupported,7853,4229,53.85%,unsupported,unsupported,75356,34124,unsupported,unsupported,45.28%
+http://example.com/foo#age+gender,http://example.com/foo#female,,,unsupported,938,538,57.36%,,,,,,,
+http://example.com/foo#age+gender,http://example.com/foo#male,,,unsupported,919,498,54.19%,,,,,,,
+http://example.com/foo#age+gender,http://example.com/foo#female,,,unsupported,2987,1671,55.94%,,,,,,,
+http://example.com/foo#age+gender,http://example.com/foo#male,,,unsupported,2739,1522,55.57%,,,,,,,
+http://example.com/foo#race+ethnicity,,http://example.com/foo#race-1,http://example.com/foo#ethnicity-1,unsupported,923,557,60.35%,,,,,,,
+http://example.com/foo#race+ethnicity,,http://example.com/foo#race-1,http://example.com/foo#ethnicity-2,unsupported,970,555,57.22%,,,,,,,
+http://example.com/foo#race+ethnicity,,http://example.com/foo#race-2,http://example.com/foo#ethnicity-1,unsupported,2649,1503,56.74%,,,,,,,
+http://example.com/foo#race+ethnicity,,http://example.com/foo#race-2,http://example.com/foo#ethnicity-2,unsupported,3041,1614,53.07%,,,,,,,

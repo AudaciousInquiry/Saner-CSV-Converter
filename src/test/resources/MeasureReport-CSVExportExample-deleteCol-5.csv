@@ -1,0 +1,10 @@
+stratifier,age,gender,race,totalOrdersIncrease,totalTestResultsIncrease,positiveIncrease,positiveIncreasePercent,totalOrders,rejected,totalTestResults,positive,allReports,latestReports,positivePercent
+,,,,unsupported,7853,4229,53.85%,unsupported,unsupported,75356,34124,unsupported,unsupported,45.28%
+age+gender,pediatric,female,,unsupported,938,538,57.36%,,,,,,,
+age+gender,pediatric,male,,unsupported,919,498,54.19%,,,,,,,
+age+gender,adult,female,,unsupported,2987,1671,55.94%,,,,,,,
+age+gender,adult,male,,unsupported,2739,1522,55.57%,,,,,,,
+race+ethnicity,,,race-1,unsupported,923,557,60.35%,,,,,,,
+race+ethnicity,,,race-1,unsupported,970,555,57.22%,,,,,,,
+race+ethnicity,,,race-2,unsupported,2649,1503,56.74%,,,,,,,
+race+ethnicity,,,race-2,unsupported,3041,1614,53.07%,,,,,,,

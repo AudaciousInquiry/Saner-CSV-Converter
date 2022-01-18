@@ -1,0 +1,10 @@
+positivePercent,latestReports,allReports,positive,totalTestResults,rejected,totalOrders,positiveIncreasePercent,positiveIncrease,totalTestResultsIncrease,totalOrdersIncrease,ethnicity,race,gender,age,stratifier
+45.28%,unsupported,unsupported,34124,75356,unsupported,unsupported,53.85%,4229,7853,unsupported,,,,,
+,,,,,,,57.36%,538,938,unsupported,,,female,pediatric,age+gender
+,,,,,,,54.19%,498,919,unsupported,,,male,pediatric,age+gender
+,,,,,,,55.94%,1671,2987,unsupported,,,female,adult,age+gender
+,,,,,,,55.57%,1522,2739,unsupported,,,male,adult,age+gender
+,,,,,,,60.35%,557,923,unsupported,ethnicity-1,race-1,,,race+ethnicity
+,,,,,,,57.22%,555,970,unsupported,ethnicity-2,race-1,,,race+ethnicity
+,,,,,,,56.74%,1503,2649,unsupported,ethnicity-1,race-2,,,race+ethnicity
+,,,,,,,53.07%,1614,3041,unsupported,ethnicity-2,race-2,,,race+ethnicity

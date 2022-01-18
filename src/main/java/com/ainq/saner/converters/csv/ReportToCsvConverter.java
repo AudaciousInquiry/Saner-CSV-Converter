@@ -24,10 +24,12 @@ import org.hl7.fhir.r4.model.Quantity;
 
 public class ReportToCsvConverter extends AbstractConverter {
     protected static final boolean SIMPLIFY_CODES = false;
-
+    private final MeasureReport measureReport;
     private PrintWriter csvOutput;
 
-    public ReportToCsvConverter(Writer csvOutput) {
+    public ReportToCsvConverter(Writer csvOutput, MeasureReport measureReport, Map<String, String> orderedHeaderMap) {
+        super(getMeasure(measureReport), orderedHeaderMap);
+        this.measureReport = measureReport;
         this.csvOutput = csvOutput instanceof PrintWriter ? (PrintWriter) csvOutput : new PrintWriter(csvOutput);
     }
 
@@ -84,22 +86,22 @@ public class ReportToCsvConverter extends AbstractConverter {
         return dataAbsentReason.getValue().toString();
     }
 
-    public List<List<String>> generateDataRows(MeasureReport measureReport) {
+    public List<List<String>> generateDataRows() {
         List<List<String>> data = new ArrayList<>();
         // Report on unstratified measure
-        data.add(getMeasureData(measureReport));
+        data.add(getMeasureData());
         // Report on strata
-        getStrataData(measureReport, data);
+        getStrataData(data);
         return data;
     }
 
-    public List<String> generateHeaderRows(Measure measure, Map<String, String> orderedHeaderMap) {
-        List<String> headers = getCanonicalHeaders(measure);
-        headers = remapHeaders(headers, orderedHeaderMap);
+    public List<String> generateHeaderRows() {
+        List<String> headers = getCanonicalHeaders();
+        headers = remapHeaders(headers);
         return headers;
     }
 
-    private List<String> getMeasureData(MeasureReport measureReport) {
+    private List<String> getMeasureData() {
         List<String> data = new ArrayList<>();
         for (int i = 0; i < getNumStrataColumns(); i++) {
             data.add("");
@@ -116,7 +118,7 @@ public class ReportToCsvConverter extends AbstractConverter {
         return data;
     }
 
-    private void getStrataData(MeasureReport measureReport, List<List<String>> data) {
+    private void getStrataData(List<List<String>> data) {
         // For each distinct stratifier.code in each group
         for (MeasureReportGroupComponent group: measureReport.getGroup()) {
             int measurePos = getFieldPosition(group.getCode());
@@ -137,11 +139,6 @@ public class ReportToCsvConverter extends AbstractConverter {
         }
     }
 
-    public static Object remapCSVHeaders(List<String> readHeaders, List<String> headers) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
     /**
      * Given a list of canonical headers, and a remapping of those headers, return the header values
      * to output in the CSV file.
@@ -150,13 +147,7 @@ public class ReportToCsvConverter extends AbstractConverter {
      * @param orderedHeaderMap  The remapping instructions.
      * @return The list of remapped headers.
      */
-    private List<String> remapHeaders(List<String> headers, Map<String, String> orderedHeaderMap) {
-        if (orderedHeaderMap == null || orderedHeaderMap.isEmpty()) {
-            for (int i = 0; i < headers.size(); i++) {
-                addPosition(i);
-            }
-            return simplifyHeaders(headers);
-        }
+    protected List<String> remapHeaders(List<String> headers) {
 
         List<String> newHeaders = new ArrayList<>();
         for (String header: headers) {
@@ -177,7 +168,7 @@ public class ReportToCsvConverter extends AbstractConverter {
             }
             addPosition(originalPosition);
         }
-        return newHeaders;
+        return reorderedHeaders;
     }
 
     private List<String> reorderData(List<String> list) {
@@ -196,11 +187,6 @@ public class ReportToCsvConverter extends AbstractConverter {
         return newList;
     }
 
-    public void updateMeasureReport(MeasureReport mr, List<String> data) {
-        // TODO Auto-generated method stub
-
-    }
-
     public void writeData(List<List<String>> dataRows) {
         for (List<String> list: dataRows) {
             writeHeader(reorderData(list));
@@ -216,18 +202,25 @@ public class ReportToCsvConverter extends AbstractConverter {
                 csvOutput.print(",");
             }
             String value = header;
-            if (SIMPLIFY_CODES) {
-                value = value.contains("#") ? StringUtils.substringAfter(value, "#") : value;
+            if (codeConverter != null) {
+                value = codeConverter.apply(value);
             }
-
             csvOutput.print(StringEscapeUtils.escapeCsv(value));
         }
         csvOutput.println();
 
     }
 
-    public List<String> remapCSVRow(List<String> asList) {
-        // TODO Auto-generated method stub
-        return null;
+    public void convert() {
+        writeHeader(generateHeaderRows());
+        writeData(generateDataRows());
+    }
+
+    public void setSimplifyCodes(boolean simplify) {
+        if (simplify) {
+            setConverter(this::simplifyingConverter);
+        } else {
+            setConverter(null);
+        }
     }
 }

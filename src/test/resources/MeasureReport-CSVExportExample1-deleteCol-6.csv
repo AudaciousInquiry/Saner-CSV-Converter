@@ -1,0 +1,10 @@
+stratifier,age,gender,race,ethnicity,totalTestResultsIncrease,positiveIncrease,positiveIncreasePercent,totalOrders,rejected,totalTestResults,positive,allReports,latestReports,positivePercent
+,,,,,7853,4229,53.85%,unsupported,unsupported,75356,34124,unsupported,unsupported,45.28%
+http://example.com/foo#age+gender,http://example.com/foo#pediatric,http://example.com/foo#female,,,938,538,57.36%,,,,,,,
+http://example.com/foo#age+gender,http://example.com/foo#pediatric,http://example.com/foo#male,,,919,498,54.19%,,,,,,,
+http://example.com/foo#age+gender,http://example.com/foo#adult,http://example.com/foo#female,,,2987,1671,55.94%,,,,,,,
+http://example.com/foo#age+gender,http://example.com/foo#adult,http://example.com/foo#male,,,2739,1522,55.57%,,,,,,,
+http://example.com/foo#race+ethnicity,,,http://example.com/foo#race-1,http://example.com/foo#ethnicity-1,923,557,60.35%,,,,,,,
+http://example.com/foo#race+ethnicity,,,http://example.com/foo#race-1,http://example.com/foo#ethnicity-2,970,555,57.22%,,,,,,,
+http://example.com/foo#race+ethnicity,,,http://example.com/foo#race-2,http://example.com/foo#ethnicity-1,2649,1503,56.74%,,,,,,,
+http://example.com/foo#race+ethnicity,,,http://example.com/foo#race-2,http://example.com/foo#ethnicity-2,3041,1614,53.07%,,,,,,,

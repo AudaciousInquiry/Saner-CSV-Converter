@@ -10,27 +10,14 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.UUID;
+import java.util.function.UnaryOperator;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hl7.fhir.r4.model.CanonicalType;
 import org.hl7.fhir.r4.model.Measure;
-import org.hl7.fhir.r4.model.Measure.MeasureGroupComponent;
-import org.hl7.fhir.r4.model.Measure.MeasureGroupPopulationComponent;
-import org.hl7.fhir.r4.model.Measure.MeasureGroupStratifierComponent;
-import org.hl7.fhir.r4.model.Measure.MeasureGroupStratifierComponentComponent;
 import org.hl7.fhir.r4.model.MeasureReport;
-import org.hl7.fhir.r4.model.MeasureReport.MeasureReportGroupComponent;
-import org.hl7.fhir.r4.model.MeasureReport.MeasureReportGroupPopulationComponent;
-import org.hl7.fhir.r4.model.MeasureReport.MeasureReportGroupStratifierComponent;
-import org.hl7.fhir.r4.model.MeasureReport.MeasureReportStatus;
-import org.hl7.fhir.r4.model.MeasureReport.MeasureReportType;
-import org.hl7.fhir.r4.model.MeasureReport.StratifierGroupComponent;
-import org.hl7.fhir.r4.model.MeasureReport.StratifierGroupComponentComponent;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Resource;
 
@@ -77,7 +64,8 @@ public class SanerCSVConverter {
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
             if (csvFile != null) {
-                convertCsvToResource(csvFile, new File(arg), null, Util.invertMap(columns), new FileWriter(outputFile));
+                MeasureReport mr = convertCsvToResource(csvFile, new File(arg), null, Util.invertMap(columns), null);
+                writeMeasureReport(new FileWriter(outputFile), mr);
                 csvFile = null;
                 columns.clear();
             } else if (arg.contains("=")) {
@@ -87,7 +75,8 @@ public class SanerCSVConverter {
                 File f = new File(arg);
                 String basename = StringUtils.substringBeforeLast(f.getName(),".");
                 outputFile = new File("target", basename + ".csv");
-                convertResourceToCsv(f, columns, new FileWriter(outputFile));
+                MeasureReport mr = getResource(MeasureReport.class, f);
+                convertMeasureReportToCSV(mr, columns, new FileWriter(outputFile), true);
                 columns.clear();
             } else if (arg.endsWith(".csv")) {
                 csvFile = new File(arg);
@@ -104,11 +93,10 @@ public class SanerCSVConverter {
         System.exit(errors);
     }
 
-    private static <R extends Resource> R getResource(Class<R> cz, File f) {
+    protected static <R extends Resource> R getResource(Class<R> cz, File f) throws IOException {
         if (!f.exists()) {
-            System.err.printf("File %s does not exist.%n", f);
             errors++;
-            return null;
+            throw new IOException("File " + f + " does not exist.");
         }
         try (FileReader r = new FileReader(f)) {
             if (f.getName().endsWith(".xml")) {
@@ -129,46 +117,23 @@ public class SanerCSVConverter {
         return null;
     }
 
-    public static void convertResourceToCsv(File f, Map<String, String> columns, Writer writer) {
-        MeasureReport mr = getResource(MeasureReport.class, f);
-        if (mr == null) {
-            return;
-        }
-
-        PrintWriter pw = writer instanceof PrintWriter ? (PrintWriter) writer : new PrintWriter(writer);
-
-        convertMeasureReportToCSV(mr, columns, pw);
-    }
-
-    public static void convertCsvToResource(File f, File measureFile, Reference subject, Map<String, String> columns, Writer writer) {
+    public static MeasureReport convertCsvToResource(
+        File f, File measureFile, Reference subject, Map<String, String> columns, UnaryOperator<String> converter) throws IOException {
         Measure measure = getResource(Measure.class, measureFile);
-        if (measure == null) {
-            return;
-        }
-
         MeasureReport mr = null;
         try (FileReader r = new FileReader(f, StandardCharsets.UTF_8)) {
-            mr = convertCSVToMeasureReport(r, measure, subject, columns);
+            mr = convertCSVToMeasureReport(r, measure, subject, columns, converter);
             mr.setId(StringUtils.substringBefore(f.getName(), "."));
-        } catch (FileNotFoundException e) {
-            System.err.printf("File %s could not be found.%n", f);
-        } catch (IOException e) {
-            System.err.printf("Error reading %s.%n", f);
         }
-
-        writeMeasureReport(f, writer, mr);
+        return mr;
     }
 
-    private static void writeMeasureReport(File f, Writer writer, MeasureReport mr) {
-        PrintWriter pw = writer instanceof PrintWriter ? (PrintWriter) writer : new PrintWriter(writer);
+    protected static void writeMeasureReport(Writer writer, MeasureReport mr) throws IOException {
         try {
-            yp.encodeResourceToWriter(mr, pw);
-        } catch (DataFormatException e) {
-            System.err.printf("Error converting resource %s.%n", f);
+            yp.encodeResourceToWriter(mr, writer);
+        } catch (DataFormatException | IOException e) {
             errors++;
-        } catch (IOException e) {
-            System.err.printf("Error writing resource for %s.%n", f);
-            errors++;
+            throw e;
         }
     }
 
@@ -177,122 +142,22 @@ public class SanerCSVConverter {
      * @param measureReport The FHIR MeasureReport to convert.
      * @param orderedHeaderMap The map from canonical headers to output header names.  Fields are reported in the order that map.entries() returns keys. See {@link java.util.LinkedHashMap}.
      * @param csvOutput The place to store the CSV Output
+     * @param simplify
      * @throws CSVConversionException
      */
-    public static void convertMeasureReportToCSV(MeasureReport measureReport, Map<String, String> orderedHeaderMap, Writer csvOutput) {
-        ReportToCsvConverter converter = new ReportToCsvConverter(csvOutput);
-        Measure measure = getMeasure(measureReport);
-        if (orderedHeaderMap == null || orderedHeaderMap.isEmpty()) {
-            orderedHeaderMap = converter.getCanonicalHeaderMap(measure);
-        }
-        List<String> headers = converter.generateHeaderRows(measure, orderedHeaderMap);
-        converter.writeHeader(headers);
-        List<List<String>> dataRows = converter.generateDataRows(measureReport);
-        converter.writeData(dataRows);
+    public static void convertMeasureReportToCSV(MeasureReport measureReport, Map<String, String> orderedHeaderMap, Writer csvOutput, boolean simplify) {
+        ReportToCsvConverter converter = new ReportToCsvConverter(csvOutput, measureReport, orderedHeaderMap);
+        converter.setSimplifyCodes(simplify);
+        converter.convert();
     }
 
-    /**
-     * Given a MeasureReport resource, return a Measure describing the reporting model
-     * either from the cached value, or computed from the MeasureReport.
-     *
-     * @param measureReport The MeasureReport
-     * @return
-     */
-    private static Measure getMeasure(MeasureReport measureReport) {
-        CanonicalType measure = measureReport.getMeasureElement();
-        Object resource = measure == null ? null : measure.getUserData("resource");
-        if (resource == null) {
-            resource = computeMeasureFromReport(measureReport);
-            if (measure != null) {
-                measure.setUserData("resource", resource);
-            }
+    public static MeasureReport convertCSVToMeasureReport(
+        Reader r, Measure measure, Reference subject, Map<String, String> orderedHeaderMap, UnaryOperator<String> codeConverter) throws IOException {
+        CsvToReportConverter converter = new CsvToReportConverter(measure, subject, orderedHeaderMap);
+        if (codeConverter != null) {
+            converter.setConverter(codeConverter);
         }
-        return (Measure) resource;
-    }
-
-    /**
-     * Craft enough of a measure from a Measure report so that we understand the
-     * reporting model.
-     *
-     * @param measureReport The measure report.
-     * @return  A Measure resource describing the reporting model.
-     */
-    private static Measure computeMeasureFromReport(MeasureReport measureReport) {
-        Measure measure = new Measure();
-        measure.setUrl(measureReport.getMeasure());
-        for (MeasureReportGroupComponent group: measureReport.getGroup()) {
-            MeasureGroupComponent g = measure.addGroup();
-            g.setCode(group.getCode());
-
-            for (MeasureReportGroupPopulationComponent pop: group.getPopulation()) {
-                MeasureGroupPopulationComponent p = g.addPopulation();
-                p.setCode(pop.getCode());
-            }
-
-            for (MeasureReportGroupStratifierComponent strat: group.getStratifier()) {
-                MeasureGroupStratifierComponent s = g.addStratifier();
-                s.setCode(strat.getCodeFirstRep());
-
-                StratifierGroupComponent stratum = strat.getStratumFirstRep();
-                for (StratifierGroupComponentComponent comp: stratum.getComponent()) {
-                    MeasureGroupStratifierComponentComponent c = s.addComponent();
-                    c.setCode(comp.getCode());
-                }
-            }
-        }
-        return measure;
-    }
-
-    private static MeasureReport initializeReportFromMeasure(Measure measure, Reference subject) {
-        MeasureReport measureReport = new MeasureReport();
-        measureReport.getMeta().addProfile("http://hl7.org/fhir/uv/saner/StructureDefinition/PublicHealthMeasureReport");
-        measureReport.setMeasure(measure.getUrl());
-        measureReport.addIdentifier().setSystem("urn:ietf:rfc:3986").setValue("urn:uuid:" + UUID.randomUUID().toString());
-        measureReport.setDate(new Date());
-        measureReport.setSubject(subject);
-        measureReport.setStatus(MeasureReportStatus.COMPLETE);
-        measureReport.setType(MeasureReportType.SUMMARY);
-        for (MeasureGroupComponent group: measure.getGroup()) {
-            MeasureReportGroupComponent g = measureReport.addGroup();
-            g.setCode(group.getCode());
-
-            for (MeasureGroupPopulationComponent pop: group.getPopulation()) {
-                MeasureReportGroupPopulationComponent p = g.addPopulation();
-                p.setCode(pop.getCode());
-            }
-        }
-        return measureReport;
-    }
-
-    public static MeasureReport convertCSVToMeasureReport(Reader r, Measure measure, Reference subject, Map<String, String> orderedHeaderMap) throws IOException {
-        CsvToReportConverter converter = new CsvToReportConverter();
-        if (orderedHeaderMap == null || orderedHeaderMap.isEmpty()) {
-            orderedHeaderMap = converter.getCanonicalHeaderMap(measure);
-        }
-        MeasureReport mr = initializeReportFromMeasure(measure, subject);
-
-        try (CSVReader csvReader = new CSVReader(r)) {
-            // Get actual headers in CSV File
-            String[] firstLine = csvReader.readNext();
-            // Remove BOM from first line if present
-            if (firstLine.length > 0 && firstLine[0].charAt(0) == '\uFEFF') {
-                firstLine[0] = firstLine[0].substring(1);
-            }
-            List<String> readHeaders = Arrays.asList(firstLine);
-
-            // Update headerData with instructions to restore a row to canonical order
-            converter.remapCSVHeaders(readHeaders, measure, orderedHeaderMap);
-            String[] row;
-            while ((row = csvReader.readNext()) != null) {
-                List<String> data = Arrays.asList(row);
-                if (converter.hasStrata(row)) {
-                    converter.updateMeasureReportStrata(mr, measure, data);
-                } else {
-                    converter.updateMeasureReport(mr, data);
-                }
-            }
-            return mr;
-        }
+        return converter.convert(r);
     }
 
 }
