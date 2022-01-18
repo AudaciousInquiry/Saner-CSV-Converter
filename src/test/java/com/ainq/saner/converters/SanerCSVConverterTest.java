@@ -3,7 +3,6 @@ package com.ainq.saner.converters;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,9 +13,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.UnaryOperator;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
@@ -25,8 +21,6 @@ import org.hl7.fhir.r4.model.Reference;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
-
 import com.opencsv.CSVReader;
 
 class SanerCSVConverterTest extends SanerCSVConverter {
@@ -83,6 +77,10 @@ class SanerCSVConverterTest extends SanerCSVConverter {
         execToResource(idInput, idOutput, measureId, null, null);
     }
 
+    private String defaultCodeSystemConverter(String s) {
+        return s.contains("#") ? s : ("http://example.com/foo#" + s);
+    }
+
     private void execToResource(String idInput, String idOutput, String measureId, Reference subject,
         Map<String, String> headerMap) throws IOException {
         File f = new File(TEST_REPORT_BASE + idInput + ".csv");
@@ -92,9 +90,9 @@ class SanerCSVConverterTest extends SanerCSVConverter {
         File compareFile = new File(TEST_REPORT_BASE + idOutput + ".yaml");
 
         MeasureReport originalMr = getResource(MeasureReport.class, compareFile);
-        UnaryOperator<String> converter = s -> s.contains("#") ? s : ("http://example.com/foo#" + s);
+
         try (FileWriter fw = new FileWriter(outputFile)) {
-            MeasureReport mr = convertCsvToResource(f, measureFile, subject, headerMap, converter);
+            MeasureReport mr = convertCsvToResource(f, measureFile, subject, headerMap, this::defaultCodeSystemConverter);
 
             // Do some cleanup for diffs that do not matter
             mr.setId(originalMr.getId());
@@ -339,6 +337,7 @@ class SanerCSVConverterTest extends SanerCSVConverter {
     private String[] renamer(String rows[], boolean firstRow) {
         if (firstRow) {
             for (int i = 0; i < rows.length; i++) {
+                @SuppressWarnings("unused")
                 String old = rows[i];
                 rows[i] = "header" + (i+1);
                 //System.out.println(old + "=" + rows[i]);

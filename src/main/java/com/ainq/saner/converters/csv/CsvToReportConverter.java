@@ -5,15 +5,18 @@ import java.io.Reader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -79,7 +82,7 @@ public class CsvToReportConverter extends AbstractConverter {
         }
 
         public String toString() {
-            return String.format("%s#%s:%s", code.getSystem(), code.getCode(), component);
+            return String.format("%s#%s:%s", code.hasSystem() ? code.getSystem() : "", code.getCode(), component);
         }
     }
     private static final String UCUM_SYSTEM =  "http://unitsofmeasure.org";
@@ -90,27 +93,46 @@ public class CsvToReportConverter extends AbstractConverter {
             "not-performed", "not-permitted");
 
     /** The measure being produced */
-    private final MeasureReport measureReport;
+    private MeasureReport measureReport;
 
     /** The list of codes identifying fields in the CSV */
     private final List<Codeable> codes = new ArrayList<>();
-    /** The list of codes identifying groups */
-    private final List<String> groups = new ArrayList<>();
-    /** The list of codes identifying populations */
-    private final List<String> populations = new ArrayList<>();
-    /** The list of codes identifying strata */
-    private final List<String> strata = new ArrayList<>();
+    /** The list of headers and codes identifying groups */
+    private final List<String> groupHeaders = new ArrayList<>();
+    private final List<String> groupCodes = new ArrayList<>();
+    /** The list of headers and codes identifying populations */
+    private final List<String> populationHeaders = new ArrayList<>();
+    private final List<String> populationCodes = new ArrayList<>();
+    /** The list of headers identifying strata and codes */
+    private final List<String> strataHeaders = new ArrayList<>();
+    private final List<String> strataCodes = new ArrayList<>();
     /** The headers in the CSVFile */
     private final List<String> headers = new ArrayList<>();
     /** The order for processing data in columns */
     private final List<Integer> columnOrder = new ArrayList<>();
     /** The column in which the stratifier is found */
     private int stratifierColumn = -1;
+    private final Reference subject;
 
     public CsvToReportConverter(Measure measure, Reference subject, Map<String, String> orderedHeaderMap) {
         super(measure, orderedHeaderMap);
         this.measureReport = initializeReportFromMeasure(measure, subject);
-        setConverter(s -> s);
+        this.subject = subject;
+        setConverter(null);
+    }
+
+    public void reset() {
+        stratifierColumn = -1;
+        headers.clear();
+        groupHeaders.clear();
+        groupCodes.clear();
+        populationHeaders.clear();
+        populationCodes.clear();
+        strataHeaders.clear();
+        strataCodes.clear();
+        codes.clear();
+        columnOrder.clear();
+        measureReport = initializeReportFromMeasure(measure, subject);
     }
 
     /**
@@ -120,8 +142,8 @@ public class CsvToReportConverter extends AbstractConverter {
      * @param csvHeaders       The headers in the CSV File
      */
     public void remapCSVHeaders(List<String> csvHeaders) {
-        // For each header from the CSV File
-        // Provide instructions for how to get the component of the MeasureReport from the code
+        reset();
+
         headers.addAll(csvHeaders);
         int columnPos = 0;
         String stratifierCode = "#" + STRATIFIER_CODE;
@@ -140,11 +162,11 @@ public class CsvToReportConverter extends AbstractConverter {
                 if (codeable != null) {
                     IBase component = codeable.getComponent();
                     if (component instanceof MeasureGroupComponent) {
-                        groups.add(header);
+                        groupHeaders.add(header);
                     } else if (component instanceof MeasureGroupPopulationComponent) {
-                        populations.add(header);
+                        populationHeaders.add(header);
                     } else if (component instanceof MeasureGroupStratifierComponentComponent) {
-                        strata.add(header);
+                        strataHeaders.add(header);
                     }
                 }
                 codes.add(codeable);
@@ -155,9 +177,13 @@ public class CsvToReportConverter extends AbstractConverter {
 
         // Sort the lists of keys into the correct processing order
         Comparator<String> comp = Comparator.comparingInt(s -> indexOf(s, processingOrder));
-        groups.sort(comp);
-        populations.sort(comp);
-        strata.sort(comp);
+        groupHeaders.sort(comp);
+        populationHeaders.sort(comp);
+        strataHeaders.sort(comp);
+
+        groupHeaders.stream().map(s -> invertedHeaderMap.get(s)).forEach(s -> groupCodes.add(s));
+        populationHeaders.stream().map(s -> invertedHeaderMap.get(s)).forEach(s -> populationCodes.add(s));
+        strataHeaders.stream().map(s -> invertedHeaderMap.get(s)).forEach(s -> strataCodes.add(s));
     }
 
     private Codeable getCodeableFromCode(String coding, Measure measure) {
@@ -371,7 +397,7 @@ public class CsvToReportConverter extends AbstractConverter {
             return row.length >= stratifierColumn && !StringUtils.isBlank(row[stratifierColumn]);
         }
         // determine stratifier from column values
-        for (String stratum: strata) {
+        for (String stratum: strataCodes) {
             if (!StringUtils.isBlank(getDatumAtColumn(Arrays.asList(row), stratum))) {
                 return true;
             }
@@ -383,13 +409,13 @@ public class CsvToReportConverter extends AbstractConverter {
         // The row has strata, get the stratifier encoded by this row.
         String stratifier = getStratifier(data);
 
-        for (String group: groups) {
+        for (String group: groupCodes) {
             MeasureReportGroupComponent g = getMeasureReportComponent(measureReport.getGroup(), group);
             MeasureGroupComponent gg = getMeasureReportComponent(measure.getGroup(), group);
             if (g == null || gg == null) {
                 continue;
             }
-            MeasureReportGroupStratifierComponent s = getStratifier(measure, stratifier, group, g);
+            MeasureReportGroupStratifierComponent s = getStratifierComponent(stratifier, group, g);
             MeasureGroupStratifierComponent ss = getMeasureReportComponent(gg.getStratifier(), stratifier);
 
             if (s == null || ss == null) {
@@ -418,7 +444,7 @@ public class CsvToReportConverter extends AbstractConverter {
 
         // Get the list of stratifiers that are present
         List<String> stratumPresent =
-            strata.stream().filter(s -> !StringUtils.isBlank(getDatumAtColumn(data, s))).collect(Collectors.toList());
+            strataCodes.stream().filter(s -> !StringUtils.isBlank(getDatumAtColumn(data, s))).collect(Collectors.toList());
 
         if (stratumPresent.isEmpty()) {
             return null;
@@ -457,9 +483,9 @@ public class CsvToReportConverter extends AbstractConverter {
             CodeableConcept cc = scc.getCode();
             StratifierGroupComponentComponent sc = stratum.addComponent().setCode(cc);
             for (Coding coding: cc.getCoding()) {
-                String code = coding.getCode();
-                if (headers.contains(code) && strata.contains(code)) {
-                    value = getDatumAtColumn(data, coding.getCode());
+                String code = String.format("%s#%s", coding.hasSystem() ? coding.getSystem() : "", coding.getCode());
+                if (strataCodes.contains(code)) {
+                    value = getDatumAtColumn(data, code);
                     break;
                 }
             }
@@ -479,7 +505,7 @@ public class CsvToReportConverter extends AbstractConverter {
         }
     }
 
-    private MeasureReportGroupStratifierComponent getStratifier(Measure measure, String stratifier, String group,
+    private MeasureReportGroupStratifierComponent getStratifierComponent(String stratifier, String group,
         MeasureReportGroupComponent g) {
         MeasureReportGroupStratifierComponent s = getMeasureReportComponent(g.getStratifier(), stratifier);
 
@@ -499,7 +525,7 @@ public class CsvToReportConverter extends AbstractConverter {
 
     private void updateStrataPopulations(List<String> data, MeasureReportGroupComponent g,
         StratifierGroupComponent stratum) {
-        for (String population: populations) {
+        for (String population: populationCodes) {
             MeasureReportGroupPopulationComponent p = getMeasureReportComponent(g.getPopulation(), population);
             if (p == null) {
                 continue;
