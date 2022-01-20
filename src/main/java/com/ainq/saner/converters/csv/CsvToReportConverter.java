@@ -47,7 +47,7 @@ import org.hl7.fhir.r4.model.MeasureReport.StratifierGroupPopulationComponent;
 import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Reference;
 
-import com.ainq.saner.util.Util;
+import com.ainq.saner.converters.csv.Util;
 import com.opencsv.CSVReader;
 
 public class CsvToReportConverter extends AbstractConverter {
@@ -462,7 +462,7 @@ public class CsvToReportConverter extends AbstractConverter {
     }
     private boolean hasStratum(MeasureGroupStratifierComponent comp, String s) {
         for (MeasureGroupStratifierComponentComponent c: comp.getComponent()) {
-            if (c.getCode().getCoding().stream().anyMatch(coding -> stringMatchesCoding(s, coding))) {
+            if (c.getCode().getCoding().stream().anyMatch(coding -> Util.stringMatchesCoding(s, coding))) {
                 return true;
             }
         }
@@ -537,49 +537,18 @@ public class CsvToReportConverter extends AbstractConverter {
         }
     }
 
-
-    private List<String> getCodesForComponent(Class<? extends Element> cls) {
-        List<String> dataCodes = new ArrayList<>();
-        for (Codeable codeable: codes) {
-            if (codeable == null) {
-                continue;
-            }
-            if (cls.isInstance(codeable.getComponent())) {
-                dataCodes.add(codeable.getCode().getCode());
-            }
-        }
-        return dataCodes;
-    }
-
     private <T extends IBase> T getMeasureReportComponent(List<T> list, String code) {
         for (T item: list) {
             CodeableConcept cc = getCode(item);
             if (cc == null) {
                 continue;
             }
-            if (cc.getCoding().stream().anyMatch(c -> stringMatchesCoding(code, c))) {
+            if (cc.getCoding().stream().anyMatch(c -> Util.stringMatchesCoding(code, c))) {
                 return item;
             }
         }
         return null;
     }
-
-    private boolean stringMatchesCoding(String code, Coding coding) {
-        if (code == null) {
-            throw new NullPointerException();
-        }
-        String codingCode = coding.getCode();
-        if (code.equals(codingCode)) {
-            return true;
-        }
-        int i = code.indexOf('#');
-        if (i < 0) {
-            return false;
-        }
-        String system = coding.hasSystem() ? coding.getSystem() : "";
-        return code.substring(0, i).equals(system) && code.substring(i + 1).equals(codingCode);
-    }
-
 
     private String getDatumAtColumn(List<String> data, String code) {
         for (int i = 0; i < codes.size(); i++) {
@@ -587,7 +556,7 @@ public class CsvToReportConverter extends AbstractConverter {
             if (codeable == null) {
                 continue;
             }
-            if (stringMatchesCoding(code, codeable.getCode())) {
+            if (Util.stringMatchesCoding(code, codeable.getCode())) {
                 return data.get(i);
             }
         }

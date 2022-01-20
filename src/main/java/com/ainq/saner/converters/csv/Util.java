@@ -1,7 +1,9 @@
-package com.ainq.saner.util;
+package com.ainq.saner.converters.csv;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import org.hl7.fhir.r4.model.Coding;
 
 public class Util {
     /**
@@ -20,5 +22,21 @@ public class Util {
             }
         }
         return inversion;
+    }
+
+    public static boolean stringMatchesCoding(String code, Coding coding) {
+        if (code == null) {
+            throw new NullPointerException();
+        }
+        String codingCode = coding.getCode();
+        if (code.equals(codingCode)) {
+            return true;
+        }
+        int i = code.indexOf('#');
+        if (i < 0) {
+            return false;
+        }
+        String system = coding.hasSystem() ? coding.getSystem() : "";
+        return code.substring(0, i).equals(system) && code.substring(i + 1).equals(codingCode);
     }
 }

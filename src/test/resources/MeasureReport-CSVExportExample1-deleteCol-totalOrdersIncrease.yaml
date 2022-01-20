@@ -1,0 +1,470 @@
+---
+resourceType: "MeasureReport"
+id: "CSVExportExample"
+meta:
+  profile:
+  - "http://hl7.org/fhir/uv/saner/StructureDefinition/PublicHealthMeasureReport"
+identifier:
+- system: "urn:ietf:rfc:3986"
+  value: "urn:uuid:375c3957-9219-11ea-1863-09173f13e4c5"
+status: "complete"
+type: "summary"
+measure: "http://hl7.org/fhir/uv/saner/Measure/FEMADailyHospitalCOVID19Reporting"
+subject:
+  reference: "Location/states-NJ"
+  identifier:
+    system: "https://www.census.gov/geographies"
+    value: "34"
+  display: "State of New Jersey"
+date: "2020-04-04"
+period:
+  start: "2020-04-04"
+  end: "2020-04-04"
+group:
+- code:
+    coding:
+    - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasureGroupSystem"
+      code: "positiveIncreasePercent"
+  population:
+  - code:
+      coding:
+      - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+        code: "totalOrdersIncrease"
+      - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+        code: "initial-population"
+  - code:
+      coding:
+      - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+        code: "totalTestResultsIncrease"
+      - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+        code: "denominator"
+    count: 7853
+  - code:
+      coding:
+      - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+        code: "positiveIncrease"
+      - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+        code: "numerator"
+    count: 4229
+  measureScore:
+    value: 53.85
+    unit: "%"
+    system: "http://unitsofmeasure.org"
+    code: "%"
+  stratifier:
+  - code:
+    - coding:
+      - system: "http://example.com/foo"
+        code: "age+gender"
+    stratum:
+    - component:
+      - code:
+          coding:
+          - system: "http://example.com/foo"
+            code: "age"
+        value:
+          coding:
+          - system: "http://example.com/foo"
+            code: "pediatric"
+      - code:
+          coding:
+          - system: "http://example.com/foo"
+            code: "gender"
+        value:
+          coding:
+          - system: "http://example.com/foo"
+            code: "female"
+      population:
+      - code:
+          coding:
+          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+            code: "totalOrdersIncrease"
+          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+            code: "initial-population"
+      - code:
+          coding:
+          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+            code: "totalTestResultsIncrease"
+          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+            code: "denominator"
+        count: 938
+      - code:
+          coding:
+          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+            code: "positiveIncrease"
+          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+            code: "numerator"
+        count: 538
+      measureScore:
+        value: 57.36
+        unit: "%"
+        system: "http://unitsofmeasure.org"
+        code: "%"
+    - component:
+      - code:
+          coding:
+          - system: "http://example.com/foo"
+            code: "age"
+        value:
+          coding:
+          - system: "http://example.com/foo"
+            code: "pediatric"
+      - code:
+          coding:
+          - system: "http://example.com/foo"
+            code: "gender"
+        value:
+          coding:
+          - system: "http://example.com/foo"
+            code: "male"
+      population:
+      - code:
+          coding:
+          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+            code: "totalOrdersIncrease"
+          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+            code: "initial-population"
+      - code:
+          coding:
+          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+            code: "totalTestResultsIncrease"
+          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+            code: "denominator"
+        count: 919
+      - code:
+          coding:
+          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+            code: "positiveIncrease"
+          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+            code: "numerator"
+        count: 498
+      measureScore:
+        value: 54.19
+        unit: "%"
+        system: "http://unitsofmeasure.org"
+        code: "%"
+    - component:
+      - code:
+          coding:
+          - system: "http://example.com/foo"
+            code: "age"
+        value:
+          coding:
+          - system: "http://example.com/foo"
+            code: "adult"
+      - code:
+          coding:
+          - system: "http://example.com/foo"
+            code: "gender"
+        value:
+          coding:
+          - system: "http://example.com/foo"
+            code: "female"
+      population:
+      - code:
+          coding:
+          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+            code: "totalOrdersIncrease"
+          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+            code: "initial-population"
+      - code:
+          coding:
+          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+            code: "totalTestResultsIncrease"
+          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+            code: "denominator"
+        count: 2987
+      - code:
+          coding:
+          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+            code: "positiveIncrease"
+          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+            code: "numerator"
+        count: 1671
+      measureScore:
+        value: 55.94
+        unit: "%"
+        system: "http://unitsofmeasure.org"
+        code: "%"
+    - component:
+      - code:
+          coding:
+          - system: "http://example.com/foo"
+            code: "age"
+        value:
+          coding:
+          - system: "http://example.com/foo"
+            code: "adult"
+      - code:
+          coding:
+          - system: "http://example.com/foo"
+            code: "gender"
+        value:
+          coding:
+          - system: "http://example.com/foo"
+            code: "male"
+      population:
+      - code:
+          coding:
+          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+            code: "totalOrdersIncrease"
+          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+            code: "initial-population"
+      - code:
+          coding:
+          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+            code: "totalTestResultsIncrease"
+          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+            code: "denominator"
+        count: 2739
+      - code:
+          coding:
+          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+            code: "positiveIncrease"
+          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+            code: "numerator"
+        count: 1522
+      measureScore:
+        value: 55.57
+        unit: "%"
+        system: "http://unitsofmeasure.org"
+        code: "%"
+  - code:
+    - coding:
+      - system: "http://example.com/foo"
+        code: "race+ethnicity"
+    stratum:
+    - component:
+      - code:
+          coding:
+          - system: "http://example.com/foo"
+            code: "race"
+        value:
+          coding:
+          - system: "http://example.com/foo"
+            code: "race-1"
+      - code:
+          coding:
+          - system: "http://example.com/foo"
+            code: "ethnicity"
+        value:
+          coding:
+          - system: "http://example.com/foo"
+            code: "ethnicity-1"
+      population:
+      - code:
+          coding:
+          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+            code: "totalOrdersIncrease"
+          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+            code: "initial-population"
+      - code:
+          coding:
+          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+            code: "totalTestResultsIncrease"
+          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+            code: "denominator"
+        count: 923
+      - code:
+          coding:
+          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+            code: "positiveIncrease"
+          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+            code: "numerator"
+        count: 557
+      measureScore:
+        value: 60.35
+        unit: "%"
+        system: "http://unitsofmeasure.org"
+        code: "%"
+    - component:
+      - code:
+          coding:
+          - system: "http://example.com/foo"
+            code: "race"
+        value:
+          coding:
+          - system: "http://example.com/foo"
+            code: "race-1"
+      - code:
+          coding:
+          - system: "http://example.com/foo"
+            code: "ethnicity"
+        value:
+          coding:
+          - system: "http://example.com/foo"
+            code: "ethnicity-2"
+      population:
+      - code:
+          coding:
+          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+            code: "totalOrdersIncrease"
+          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+            code: "initial-population"
+      - code:
+          coding:
+          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+            code: "totalTestResultsIncrease"
+          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+            code: "denominator"
+        count: 970
+      - code:
+          coding:
+          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+            code: "positiveIncrease"
+          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+            code: "numerator"
+        count: 555
+      measureScore:
+        value: 57.22
+        unit: "%"
+        system: "http://unitsofmeasure.org"
+        code: "%"
+    - component:
+      - code:
+          coding:
+          - system: "http://example.com/foo"
+            code: "race"
+        value:
+          coding:
+          - system: "http://example.com/foo"
+            code: "race-2"
+      - code:
+          coding:
+          - system: "http://example.com/foo"
+            code: "ethnicity"
+        value:
+          coding:
+          - system: "http://example.com/foo"
+            code: "ethnicity-1"
+      population:
+      - code:
+          coding:
+          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+            code: "totalOrdersIncrease"
+          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+            code: "initial-population"
+      - code:
+          coding:
+          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+            code: "totalTestResultsIncrease"
+          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+            code: "denominator"
+        count: 2649
+      - code:
+          coding:
+          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+            code: "positiveIncrease"
+          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+            code: "numerator"
+        count: 1503
+      measureScore:
+        value: 56.74
+        unit: "%"
+        system: "http://unitsofmeasure.org"
+        code: "%"
+    - component:
+      - code:
+          coding:
+          - system: "http://example.com/foo"
+            code: "race"
+        value:
+          coding:
+          - system: "http://example.com/foo"
+            code: "race-2"
+      - code:
+          coding:
+          - system: "http://example.com/foo"
+            code: "ethnicity"
+        value:
+          coding:
+          - system: "http://example.com/foo"
+            code: "ethnicity-2"
+      population:
+      - code:
+          coding:
+          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+            code: "totalOrdersIncrease"
+          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+            code: "initial-population"
+      - code:
+          coding:
+          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+            code: "totalTestResultsIncrease"
+          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+            code: "denominator"
+        count: 3041
+      - code:
+          coding:
+          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+            code: "positiveIncrease"
+          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+            code: "numerator"
+        count: 1614
+      measureScore:
+        value: 53.07
+        unit: "%"
+        system: "http://unitsofmeasure.org"
+        code: "%"
+- code:
+    coding:
+    - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasureGroupSystem"
+      code: "positivePercent"
+  population:
+  - code:
+      coding:
+      - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+        code: "totalOrders"
+      - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+        code: "initial-population"
+    _count:
+      extension:
+      - url: "http://hl7.org/fhir/StructureDefinition/data-absent-reason"
+        valueCode: "unsupported"
+  - code:
+      coding:
+      - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+        code: "rejected"
+      - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+        code: "denominator-exclusion"
+    _count:
+      extension:
+      - url: "http://hl7.org/fhir/StructureDefinition/data-absent-reason"
+        valueCode: "unsupported"
+  - code:
+      coding:
+      - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+        code: "totalTestResults"
+      - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+        code: "denominator"
+    count: 75356
+  - code:
+      coding:
+      - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+        code: "positive"
+      - system: "http://terminology.hl7.org/CodeSystem/measure-population"
+        code: "numerator"
+    count: 34124
+  - code:
+      coding:
+      - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+        code: "allReports"
+      text: "All Laboratory Reports for any Order"
+    _count:
+      extension:
+      - url: "http://hl7.org/fhir/StructureDefinition/data-absent-reason"
+        valueCode: "unsupported"
+  - code:
+      coding:
+      - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
+        code: "latestReports"
+      text: "Most Recent Laboratory Reports for any Order"
+    _count:
+      extension:
+      - url: "http://hl7.org/fhir/StructureDefinition/data-absent-reason"
+        valueCode: "unsupported"
+  measureScore:
+    value: 45.28
+    unit: "%"
+    system: "http://unitsofmeasure.org"
+    code: "%"

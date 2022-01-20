@@ -5,7 +5,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
@@ -25,7 +24,7 @@ import org.hl7.fhir.r4.model.MeasureReport.MeasureReportGroupStratifierComponent
 import org.hl7.fhir.r4.model.MeasureReport.StratifierGroupComponent;
 import org.hl7.fhir.r4.model.MeasureReport.StratifierGroupComponentComponent;
 
-import com.ainq.saner.util.Util;
+import com.ainq.saner.converters.csv.Util;
 
 public abstract class AbstractConverter {
     /** The measure this converter works on */
@@ -33,11 +32,10 @@ public abstract class AbstractConverter {
     protected final Map<String, String> orderedHeaderMap;
     private int numStrataColumns;
     private final Map<String, Integer> strataFieldMap = new TreeMap<>();
-    private final List<Integer> reorder = new ArrayList<>();
     protected UnaryOperator<String> codeConverter = this::simplifyingConverter;
     protected static final String DATA_ABSENT_REASON_EXTENSION_URL = "http://hl7.org/fhir/StructureDefinition/data-absent-reason";
     protected static final String STRATIFIER_CODE = "stratifier";
-    protected static final CodeableConcept STRATIFIER = new CodeableConcept().addCoding(new Coding().setCode(STRATIFIER_CODE));
+    public static final CodeableConcept STRATIFIER = new CodeableConcept().addCoding(new Coding().setCode(STRATIFIER_CODE));
 
     protected AbstractConverter(Measure measure, Map<String, String> orderedHeaderMap) {
         this.measure = measure;
@@ -92,17 +90,6 @@ public abstract class AbstractConverter {
             return -1;
         }
         return value;
-    }
-
-    public void addPosition(int originalPosition) {
-        reorder.add(originalPosition);
-    }
-
-    public int getOriginalPosition(int newPosition) {
-        if (newPosition >= reorder.size()) {
-            return -1;
-        }
-        return reorder.get(newPosition);
     }
 
     protected static <T> int indexOf(T find, Iterable<T> list) {

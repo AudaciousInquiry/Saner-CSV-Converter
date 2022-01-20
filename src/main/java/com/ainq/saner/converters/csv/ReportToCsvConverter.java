@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +27,7 @@ public class ReportToCsvConverter extends AbstractConverter {
     protected static final boolean SIMPLIFY_CODES = false;
     private final MeasureReport measureReport;
     private PrintWriter csvOutput;
+    private final List<Integer> writeOrder = new ArrayList<>();
 
     public ReportToCsvConverter(Writer csvOutput, MeasureReport measureReport, Map<String, String> orderedHeaderMap) {
         super(getMeasure(measureReport), orderedHeaderMap);
@@ -95,12 +97,6 @@ public class ReportToCsvConverter extends AbstractConverter {
         return data;
     }
 
-    public List<String> generateHeaderRows() {
-        List<String> headers = getCanonicalHeaders();
-        headers = remapHeaders(headers);
-        return headers;
-    }
-
     private List<String> getMeasureData() {
         List<String> data = new ArrayList<>();
         for (int i = 0; i < getNumStrataColumns(); i++) {
@@ -139,69 +135,15 @@ public class ReportToCsvConverter extends AbstractConverter {
         }
     }
 
-    /**
-     * Given a list of canonical headers, and a remapping of those headers, return the header values
-     * to output in the CSV file.
-     *
-     * @param headers   The headers to remap.
-     * @param orderedHeaderMap  The remapping instructions.
-     * @return The list of remapped headers.
-     */
-    protected List<String> remapHeaders(List<String> headers) {
-
-        List<String> newHeaders = new ArrayList<>();
-        for (String header: headers) {
-            String value = orderedHeaderMap.get(header);
-            if (value == null) {
-                // No mapping means leave it out.
-                continue;
-            }
-            newHeaders.add(value);
-        }
-
-        List<String> reorderedHeaders = new ArrayList<>();
-        int originalPosition = 0;
-        for (Map.Entry<String, String> e: orderedHeaderMap.entrySet()) {
-            originalPosition = indexOf(e.getKey(), headers);
-            if (originalPosition >= 0) {
-                reorderedHeaders.add(e.getValue());
-            }
-            addPosition(originalPosition);
-        }
-        return reorderedHeaders;
-    }
-
-    private List<String> reorderData(List<String> list) {
-        List<String> newList = new ArrayList<>(getNumFields());
-        for (int i = 0; i < getNumFields(); i++) {
-            String value = "";
-            int originalPosition = getOriginalPosition(i);
-            if (originalPosition < list.size() && originalPosition >= 0) {
-                value = list.get(originalPosition);
-            }
-            while (i >= newList.size()) {
-                newList.add("");
-            }
-            newList.set(i, value);
-        }
-        return newList;
-    }
-
-    public void writeData(List<List<String>> dataRows) {
-        for (List<String> list: dataRows) {
-            writeHeader(reorderData(list));
-        }
-    }
-
-    public void writeHeader(List<String> headers) {
+    public void writeRow(List<String> data) {
         boolean first = true;
-        for (String header: headers) {
+        for (int col: writeOrder) {
             if (first) {
                 first = false;
             } else {
                 csvOutput.print(",");
             }
-            String value = header;
+            String value = col >= data.size() ? "" : data.get(col);
             if (codeConverter != null) {
                 value = codeConverter.apply(value);
             }
@@ -212,8 +154,22 @@ public class ReportToCsvConverter extends AbstractConverter {
     }
 
     public void convert() {
-        writeHeader(generateHeaderRows());
-        writeData(generateDataRows());
+        List<String> headers = getCanonicalHeaders();
+        remapRow(headers);
+        for (int i = 0; i < headers.size(); i++) {
+            headers.set(i, orderedHeaderMap.get(headers.get(i)));
+        }
+        writeRow(headers);
+        generateDataRows().forEach(this::writeRow);
+    }
+
+    private void remapRow(List<String> headers) {
+        for (String header: orderedHeaderMap.keySet()) {
+            int pos = indexOf(header, headers);
+            if (pos >= 0) {
+                writeOrder.add(pos);
+            }
+        }
     }
 
     public void setSimplifyCodes(boolean simplify) {

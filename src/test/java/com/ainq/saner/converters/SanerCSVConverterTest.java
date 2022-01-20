@@ -17,10 +17,19 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.hl7.fhir.r4.model.MeasureReport;
+import org.hl7.fhir.r4.model.MeasureReport.MeasureReportGroupComponent;
+import org.hl7.fhir.r4.model.MeasureReport.MeasureReportGroupPopulationComponent;
+import org.hl7.fhir.r4.model.MeasureReport.MeasureReportGroupStratifierComponent;
+import org.hl7.fhir.r4.model.MeasureReport.StratifierGroupComponent;
+import org.hl7.fhir.r4.model.MeasureReport.StratifierGroupComponentComponent;
+import org.hl7.fhir.r4.model.MeasureReport.StratifierGroupPopulationComponent;
 import org.hl7.fhir.r4.model.Reference;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+
+import com.ainq.saner.converters.csv.AbstractConverter;
+import com.ainq.saner.converters.csv.Util;
 import com.opencsv.CSVReader;
 
 class SanerCSVConverterTest extends SanerCSVConverter {
@@ -46,6 +55,7 @@ class SanerCSVConverterTest extends SanerCSVConverter {
         "positivePercent"
     };
 
+
     @ParameterizedTest
     @CsvSource(value = {
         "CSVExportExample,CSVExportExample,true",
@@ -56,7 +66,7 @@ class SanerCSVConverterTest extends SanerCSVConverter {
     }
 
     private void execToCsv(String idInput, String idOutput, Map<String, String> map, boolean simplify) throws IOException {
-        File f = new File(TEST_REPORT_BASE + idInput + ".json");
+        File f = new File(TEST_REPORT_BASE + idInput + ".yaml");
         String basename = StringUtils.substringBeforeLast(f.getName(),".");
         File outputFile = new File("target", basename + ".csv");
 
@@ -109,39 +119,39 @@ class SanerCSVConverterTest extends SanerCSVConverter {
 
     @ParameterizedTest
     @CsvSource(value = {
-        "CSVExportExample-deleteCol-1,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-2,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-3,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-4,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-5,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-6,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-7,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-8,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-9,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-10,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-11,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-12,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-13,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-14,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-15,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-16,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-stratifier,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-age,CSVExportExample-deleteCol-age,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-gender,CSVExportExample-deleteCol-gender,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-race,CSVExportExample-deleteCol-race,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-ethnicity,CSVExportExample-deleteCol-ethnicity,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-totalOrdersIncrease,CSVExportExample-deleteCol-totalOrdersIncrease,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-totalTestResultsIncrease,CSVExportExample-deleteCol-totalTestResultsIncrease,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-positiveIncrease,CSVExportExample-deleteCol-positiveIncrease,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-positiveIncreasePercent,CSVExportExample-deleteCol-positiveIncreasePercent,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-totalOrders,CSVExportExample-deleteCol-totalOrders,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-rejected,CSVExportExample-deleteCol-rejected,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-totalTestResults,CSVExportExample-deleteCol-totalTestResults,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-positive,CSVExportExample-deleteCol-positive,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-allReports,CSVExportExample-deleteCol-allReports,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-latestReports,CSVExportExample-deleteCol-latestReports,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-positivePercent,CSVExportExample-deleteCol-positivePercent,FEMADailyHospitalCOVID19Reporting",
 
-        "CSVExportExample1-deleteCol-1,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-2,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-3,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-4,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-5,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-6,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-7,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-8,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-9,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-10,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-11,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-12,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-13,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-14,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-15,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-16,CSVExportExample,FEMADailyHospitalCOVID19Reporting"
+        "CSVExportExample1-deleteCol-stratifier,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-age,CSVExportExample-deleteCol-age,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-gender,CSVExportExample-deleteCol-gender,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-race,CSVExportExample-deleteCol-race,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-ethnicity,CSVExportExample-deleteCol-ethnicity,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-totalOrdersIncrease,CSVExportExample-deleteCol-totalOrdersIncrease,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-totalTestResultsIncrease,CSVExportExample-deleteCol-totalTestResultsIncrease,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-positiveIncrease,CSVExportExample-deleteCol-positiveIncrease,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-positiveIncreasePercent,CSVExportExample-deleteCol-positiveIncreasePercent,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-totalOrders,CSVExportExample-deleteCol-totalOrders,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-rejected,CSVExportExample-deleteCol-rejected,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-totalTestResults,CSVExportExample-deleteCol-totalTestResults,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-positive,CSVExportExample-deleteCol-positive,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-allReports,CSVExportExample-deleteCol-allReports,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-latestReports,CSVExportExample-deleteCol-latestReports,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-positivePercent,CSVExportExample-deleteCol-positivePercent,FEMADailyHospitalCOVID19Reporting",
 
     })
     void testToResourceWithDeletedColumn(String idInput, String idOutput, String measureId) throws IOException {
@@ -150,46 +160,46 @@ class SanerCSVConverterTest extends SanerCSVConverter {
 
     @ParameterizedTest
     @CsvSource(value = {
-        "CSVExportExample-deleteCol-1,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-2,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-3,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-4,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-5,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-6,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-7,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-8,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-9,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-10,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-11,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-12,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-13,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-14,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-15,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample-deleteCol-16,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-stratifier,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-age,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-gender,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-race,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-ethnicity,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-totalOrdersIncrease,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-totalTestResultsIncrease,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-positiveIncrease,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-positiveIncreasePercent,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-totalOrders,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-rejected,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-totalTestResults,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-positive,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-allReports,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-latestReports,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample-deleteCol-positivePercent,true,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
 
-        "CSVExportExample1-deleteCol-1,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-2,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-3,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-4,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-5,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-6,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-7,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-8,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-9,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-10,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-11,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-12,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-13,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-14,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-15,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
-        "CSVExportExample1-deleteCol-16,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting"
+        "CSVExportExample1-deleteCol-stratifier,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-age,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-gender,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-race,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-ethnicity,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-totalOrdersIncrease,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-totalTestResultsIncrease,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-positiveIncrease,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-positiveIncreasePercent,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-totalOrders,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-rejected,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-totalTestResults,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-positive,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-allReports,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-latestReports,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting",
+        "CSVExportExample1-deleteCol-positivePercent,false,CSVExportExample,FEMADailyHospitalCOVID19Reporting"
     })
     void testToCsvWithDeletedColumn(String idOutput, boolean simplify, String idInput, String measureId) throws IOException {
         Map<String, String> deletedHeaderMap = new LinkedHashMap<String, String>();
+        String col = StringUtils.substringAfter(idOutput, "-deleteCol-");
 
         for (int i = 0; i < TEST_HEADERS.length; i++) {
-            String col = "-" + Integer.toString(i + 1);
-            if (!idOutput.endsWith(col)) {
+            if (!col.equals(TEST_HEADERS[i])) {
                 deletedHeaderMap.put(TEST_HEADERS[i], TEST_HEADERS[i]);
             }
         }
@@ -275,11 +285,19 @@ class SanerCSVConverterTest extends SanerCSVConverter {
             rows.get(0)[0] = firstCell.substring(1);
         }
 
+        String mrId = id.endsWith("1") ? id.substring(0, id.length() - 1) : id;
+        MeasureReport mr = yp.parseResource(MeasureReport.class, new FileReader(TEST_REPORT_BASE + mrId + ".yaml"));
+
         int columns = rows.get(0).length;
         for (int i = 0; i < columns; i++) {
-            File outputFile = new File(TEST_REPORT_BASE + id + "-deleteCol-" + (i + 1) + ".csv");
+            File outputFile = new File(TEST_REPORT_BASE + id + "-deleteCol-" + TEST_HEADERS[i] + ".csv");
             int k = i;
             mutateCsv(outputFile, rows, (String rr[], Boolean b) -> columnDeleter(rr, b, k));
+            // Create measure files for Ftest case
+            MeasureReport adjusted = removeFieldFromMeasureReport(mr, TEST_HEADERS[i]);
+            try (FileWriter fw = new FileWriter(TEST_REPORT_BASE + id + "-deleteCol-" + TEST_HEADERS[i] + ".yaml")) {
+                yp.encodeResourceToWriter(adjusted, fw);
+            }
         }
 
         mutateCsv(new File(TEST_REPORT_BASE + id + "-reversed.csv"), rows, this::rowReverser);
@@ -287,7 +305,6 @@ class SanerCSVConverterTest extends SanerCSVConverter {
         mutateCsv(new File(TEST_REPORT_BASE + id + "-renamed.csv"), rows, this::renamer);
         assertTrue(true);
     }
-
 
     private void mutateCsv(File outputFile, List<String[]> rows, BiFunction<String[], Boolean, String[]> mutator) throws IOException {
         try (FileWriter fw = new FileWriter(outputFile, StandardCharsets.UTF_8)) {
@@ -305,6 +322,96 @@ class SanerCSVConverterTest extends SanerCSVConverter {
                     fw.write(StringEscapeUtils.escapeCsv(col));
                 }
                 fw.write('\n');
+            }
+        }
+    }
+
+    private MeasureReport removeFieldFromMeasureReport(MeasureReport mr, String column) {
+        if (AbstractConverter.STRATIFIER.getCodingFirstRep().getCode().equals(column)) {
+            return mr;
+        }
+        MeasureReport adjusted = mr.copy();
+        // column represents a code that is part of the measure report.
+        // It is either a group, a population in a group, or the code for a stratifer component.
+        switch (column) {
+        case "age":
+        case "gender":
+        case "race":
+        case "ethnicity":
+            removeStratifier(adjusted, column);
+            break;
+        case "totalOrdersIncrease":
+        case "totalTestResultsIncrease":
+        case "positiveIncrease":
+            removePopulation(adjusted, column);
+            break;
+        case "positiveIncreasePercent":
+            removeGroup(adjusted, column);
+            break;
+        case "totalOrders":
+        case "rejected":
+        case "totalTestResults":
+        case "positive":
+        case "allReports":
+        case "latestReports":
+            removePopulation(adjusted, column);
+            break;
+        case "positivePercent":
+            removeGroup(adjusted, column);
+            break;
+        }
+        return adjusted;
+    }
+
+    private void removeStratifier(MeasureReport adjusted, String column) {
+        for (MeasureReportGroupComponent g: adjusted.getGroup()) {
+            for (MeasureReportGroupPopulationComponent p: g.getPopulation()) {
+                for (MeasureReportGroupStratifierComponent stratifier: g.getStratifier()) {
+                    for (StratifierGroupComponent strata : stratifier.getStratum()) {
+                        for (StratifierGroupComponentComponent comp: strata.getComponent()) {
+                            if (comp.getCode().getCoding().stream().anyMatch(s -> Util.stringMatchesCoding(column, s))) {
+                                comp.setValue(null);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void removePopulation(MeasureReport adjusted, String column) {
+        for (MeasureReportGroupComponent g: adjusted.getGroup()) {
+            for (MeasureReportGroupPopulationComponent p: g.getPopulation()) {
+                if (p.getCode().getCoding().stream().anyMatch(s -> Util.stringMatchesCoding(column, s))) {
+                    p.setCountElement(null);
+                    for (MeasureReportGroupStratifierComponent stratifier: g.getStratifier()) {
+                        for (StratifierGroupComponent strata : stratifier.getStratum()) {
+                            for (StratifierGroupPopulationComponent pop: strata.getPopulation()) {
+                                if (pop.getCode().getCoding().stream().anyMatch(s -> Util.stringMatchesCoding(column, s))) {
+                                    pop.setCountElement(null);
+                                }
+                            }
+                        }
+                    }
+                    return;
+                }
+            }
+        }
+    }
+
+    private void removeGroup(MeasureReport adjusted, String column) {
+        for (MeasureReportGroupComponent g: adjusted.getGroup()) {
+            if (g.getCode().getCoding().stream().anyMatch(s -> Util.stringMatchesCoding(column, s))) {
+                // Set measure score to null for group
+                g.setMeasureScore(null);
+
+                // for each stratifier in group, set measure score to null
+                for (MeasureReportGroupStratifierComponent stratifier: g.getStratifier()) {
+                    for (StratifierGroupComponent strata : stratifier.getStratum()) {
+                        strata.setMeasureScore(null);
+                    }
+                }
+                return;
             }
         }
     }

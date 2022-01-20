@@ -5,12 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.UnaryOperator;
@@ -25,8 +22,7 @@ import com.ainq.fhir.utils.YamlUtils;
 import com.ainq.saner.converters.csv.CSVConversionException;
 import com.ainq.saner.converters.csv.CsvToReportConverter;
 import com.ainq.saner.converters.csv.ReportToCsvConverter;
-import com.ainq.saner.util.Util;
-import com.opencsv.CSVReader;
+import com.ainq.saner.converters.csv.Util;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.DataFormatException;
@@ -42,9 +38,9 @@ import ca.uhn.fhir.parser.IParser;
 public class SanerCSVConverter {
 
     private static FhirContext ctx = FhirContext.forR4();
-    private static IParser jp = ctx.newJsonParser().setPrettyPrint(true);
-    private static IParser xp = ctx.newXmlParser().setPrettyPrint(true);
-    private static IParser yp = YamlUtils.newYamlParser(ctx).setPrettyPrint(true);
+    protected static IParser jp = ctx.newJsonParser().setPrettyPrint(true);
+    protected static IParser xp = ctx.newXmlParser().setPrettyPrint(true);
+    protected static IParser yp = YamlUtils.newYamlParser(ctx).setPrettyPrint(true);
     private static int errors = 0;
 
     /**
