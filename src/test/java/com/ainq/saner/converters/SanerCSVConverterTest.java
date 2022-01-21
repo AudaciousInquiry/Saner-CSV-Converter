@@ -273,6 +273,19 @@ class SanerCSVConverterTest extends SanerCSVConverter {
         "CSVExportExample1"
     })
     @Disabled("This is a tool to prepare test files, not really a test")
+    /**
+     * This is a utility method to prepare test files for CSV Conversion.
+     * It permutes a baseline CSV/MeasureReport pair into a colection
+     * of CSV and MeasureReport files which represent what should happen
+     * when a reportable component is deleted from the CSV/MeasureReport,
+     * when the order of CSV output is altered, introducing an extra column
+     * into the CSV file, or renaming fields in the CSV file.
+     *
+     * The resulting output produces additional test inputs for other unit tests
+     *
+     * @param id    The Id of the base measure and CSV files to permute
+     * @throws IOException  If an IO error occurs
+     */
     void permuteCsvFile(String id) throws IOException {
         File f = new File(TEST_REPORT_BASE + id + ".csv");
         List<String[]> rows = null;
@@ -386,11 +399,13 @@ class SanerCSVConverterTest extends SanerCSVConverter {
                     p.setCountElement(null);
                     for (MeasureReportGroupStratifierComponent stratifier: g.getStratifier()) {
                         for (StratifierGroupComponent strata : stratifier.getStratum()) {
+                            List<StratifierGroupPopulationComponent> removePop = new ArrayList();
                             for (StratifierGroupPopulationComponent pop: strata.getPopulation()) {
                                 if (pop.getCode().getCoding().stream().anyMatch(s -> Util.stringMatchesCoding(column, s))) {
-                                    pop.setCountElement(null);
+                                    removePop.add(pop);
                                 }
                             }
+                            strata.getPopulation().removeAll(removePop);
                         }
                     }
                     return;

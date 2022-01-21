@@ -24,17 +24,27 @@ import org.hl7.fhir.r4.model.MeasureReport.MeasureReportGroupStratifierComponent
 import org.hl7.fhir.r4.model.MeasureReport.StratifierGroupComponent;
 import org.hl7.fhir.r4.model.MeasureReport.StratifierGroupComponentComponent;
 
-import com.ainq.saner.converters.csv.Util;
-
+/**
+ * Base class for CSV Conversion
+ * @author Keith W. Boone
+ */
 public abstract class AbstractConverter {
     /** The measure this converter works on */
     protected final Measure measure;
+    /** A map from codes to headers */
     protected final Map<String, String> orderedHeaderMap;
+    /** The number of columns used for strata TODO: Move to ReporttoCSV Converter */
     private int numStrataColumns;
+    /** Mappings for strata, TODO: Move to ReporttoCSV Converter */
     private final Map<String, Integer> strataFieldMap = new TreeMap<>();
-    protected UnaryOperator<String> codeConverter = this::simplifyingConverter;
+
+    /** The operator used to convert encoded string */
+    protected UnaryOperator<String> codeConverter = AbstractConverter::simplifyingConverter;
+    /** Data Absent Reason extension, should probably move to extension utiliity class */
     protected static final String DATA_ABSENT_REASON_EXTENSION_URL = "http://hl7.org/fhir/StructureDefinition/data-absent-reason";
+    /** Fixed code value used for stratifier field */
     protected static final String STRATIFIER_CODE = "stratifier";
+    /** The STRATIFIER value as a CodeableConcept */
     public static final CodeableConcept STRATIFIER = new CodeableConcept().addCoding(new Coding().setCode(STRATIFIER_CODE));
 
     protected AbstractConverter(Measure measure, Map<String, String> orderedHeaderMap) {
@@ -46,17 +56,30 @@ public abstract class AbstractConverter {
         }
     }
 
-    protected String simplifyingConverter(String code) {
+    /**
+     * Default simplifying converter, just strip the system prefix
+     * @param code  The code to simplify
+     * @return  The simplified code without the system# prefix
+     */
+    protected static String simplifyingConverter(String code) {
         if (code == null) {
             return null;
         }
         return code.contains("#") ? StringUtils.substringAfter(code, "#") : code;
     }
 
+    /**
+     * Set the codeConverter
+     * @param codeConverter The codeConverter to set.
+     */
     public void setConverter(UnaryOperator<String> codeConverter) {
         this.codeConverter = codeConverter;
     }
 
+    /**
+     * Get the codeConverter
+     * @return the codeConverter
+     */
     public UnaryOperator<String> getConverter() {
         return codeConverter;
     }
@@ -74,15 +97,29 @@ public abstract class AbstractConverter {
         this.numStrataColumns = numStrata;
     }
 
+    /**
+     * Get the number of fields
+     * @return The number of fields.
+     */
     public int getNumFields() {
         return strataFieldMap.size();
     }
 
 
+    /**
+     * Map a field to a column
+     * @param fieldName The fieldName to map
+     * @param column    The column where it goes
+     */
     public void mapField(CodeableConcept fieldName, int column) {
         strataFieldMap.put(codeToString(fieldName), column);
     }
 
+    /**
+     * Get the position of a field from the CodeableConcept associated with it.
+     * @param fieldName The code for the field
+     * @return  The column position
+     */
     public int getFieldPosition(CodeableConcept fieldName) {
 
         Integer value = strataFieldMap.get(codeToString(fieldName));
@@ -92,6 +129,13 @@ public abstract class AbstractConverter {
         return value;
     }
 
+    /**
+     * Search a list for a value and return the position of it in the list, or -1 if not found
+     * @param <T>
+     * @param find  The value to find
+     * @param list  The list to find it in
+     * @return the position of find in the list, or -1 if not found
+     */
     protected static <T> int indexOf(T find, Iterable<T> list) {
         int i = 0;
         for (T t: list) {
@@ -103,15 +147,22 @@ public abstract class AbstractConverter {
         return -1;
     }
 
-    protected static List<String> simplifyHeaders(List<String> headers) {
-        return headers.stream().map(s -> s.contains("#") ? StringUtils.substringAfter(s, "#") : s).collect(Collectors.toList());
-    }
-
+    /**
+     * Convert a CodeableConcept into a string value.
+     * @param codeableConcept   The CodeableConcept to convert
+     * @return  A string representation of the CodeableConcept.
+     */
     public static String codeToString(CodeableConcept codeableConcept) {
         // Return first coded value
         return codeToString(codeableConcept.getCoding().get(0));
     }
 
+
+    /**
+     * Convert a Coding into a string value.
+     * @param coding   The Coding to convert
+     * @return  A string representation of the Coding.
+     */
     static String codeToString(Coding coding) {
         if (coding == null || coding.isEmpty()) {
             return null;

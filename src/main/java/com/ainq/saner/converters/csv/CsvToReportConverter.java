@@ -2,7 +2,6 @@ package com.ainq.saner.converters.csv;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,11 +22,9 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.units.qual.s;
 import org.hl7.fhir.instance.model.api.IBase;
-import org.hl7.fhir.r4.model.CodeType;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Element;
-import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.IntegerType;
 import org.hl7.fhir.r4.model.Measure;
 import org.hl7.fhir.r4.model.Measure.MeasureGroupComponent;
@@ -51,8 +48,6 @@ import com.ainq.saner.converters.csv.Util;
 import com.opencsv.CSVReader;
 
 public class CsvToReportConverter extends AbstractConverter {
-    private static final String DATA_ABSENT_REASON_URL = "http://hl7.org/fhir/StructureDefinition/data-absent-reason";
-
     class Codeable {
         private final IBase component;
         private final Coding code;
@@ -85,13 +80,6 @@ public class CsvToReportConverter extends AbstractConverter {
             return String.format("%s#%s:%s", code.hasSystem() ? code.getSystem() : "", code.getCode(), component);
         }
     }
-    private static final String UCUM_SYSTEM =  "http://unitsofmeasure.org";
-    private static final List<String> DATA_ABSENT_REASONS =
-        Arrays.asList(
-            "unknown", "asked-unknown", "temp-unknown", "not-asked", "asked-declined", "masked", "not-applicable",
-            "unsupported", "as-text", "error", "non-a-number", "negative-infinity", "positive-infinity",
-            "not-performed", "not-permitted");
-
     /** The measure being produced */
     private MeasureReport measureReport;
 
@@ -149,7 +137,8 @@ public class CsvToReportConverter extends AbstractConverter {
         String stratifierCode = "#" + STRATIFIER_CODE;
 
         Map<String, String> invertedHeaderMap = Util.invertMap(orderedHeaderMap);
-        Set<String> processingOrder = invertedHeaderMap.keySet();
+        List<String> processingOrder = new ArrayList<>(invertedHeaderMap.keySet());
+        processingOrder.retainAll(csvHeaders);
 
         for (String header: csvHeaders) {
             String codeValue = invertedHeaderMap.get(header);
@@ -291,31 +280,12 @@ public class CsvToReportConverter extends AbstractConverter {
             IBase comp = codeable.getComponent();
             String value = data.get(getPos);
             if (comp instanceof MeasureGroupComponent) {
-                setMeasureScore(getMeasureScoreElement(codeable.getCode()), value);
+                Util.setQuantityToString(getMeasureScoreElement(codeable.getCode()), value);
             } else if (comp instanceof MeasureGroupPopulationComponent) {
-                setCount(getCountElement(codeable.getCode()), value);
+                Util.setIntegerToString(getCountElement(codeable.getCode()), value);
             }
         }
 
-    }
-
-    private void setMeasureScore(Quantity measureScoreElement, String value) {
-        if (value == null) {
-            value = "";
-        } else {
-            value = value.replace(" ", "");
-        }
-        if (value.endsWith("%")) {
-            value = value.replace("%", "");
-            measureScoreElement.setCode("%");
-            measureScoreElement.setUnit("%");
-            measureScoreElement.setSystem(UCUM_SYSTEM);
-        }
-        if (value.matches("^[+\\-]?[0-9]+(\\.[0-9]*)?([eE][+\\-][0-9]*)?$")) {
-            measureScoreElement.setValue(new BigDecimal(value));
-        } else {
-            setDataAbsent(measureScoreElement.addExtension(), value);
-        }
     }
 
     private Quantity getMeasureScoreElement(Coding code) {
@@ -368,30 +338,6 @@ public class CsvToReportConverter extends AbstractConverter {
     }
 
 
-    private void setCount(IntegerType count, String value) {
-        if (value == null) {
-            value = "";
-        } else {
-            value = value.trim();
-        }
-        if (value.matches("^[0-9]+$")) {
-            count.setValueAsString(value);
-        } else {
-            setDataAbsent(count.addExtension(), value);
-        }
-    }
-
-    private void setDataAbsent(Extension ex, String value) {
-        if (DATA_ABSENT_REASONS.contains(value.toLowerCase())) {
-            ex.setUrl(DATA_ABSENT_REASON_URL).setValue(new CodeType(value));
-        } else if (StringUtils.isBlank(value)) {
-            ex.setUrl(DATA_ABSENT_REASON_URL).setValue(new CodeType("unknown"));
-        } else {
-            throw new IllegalArgumentException("Cannot set value to " + value);
-        }
-    }
-
-
     public boolean hasStrata(String[] row) {
         if (stratifierColumn >= 0) {
             return row.length >= stratifierColumn && !StringUtils.isBlank(row[stratifierColumn]);
@@ -409,7 +355,8 @@ public class CsvToReportConverter extends AbstractConverter {
         // The row has strata, get the stratifier encoded by this row.
         String stratifier = getStratifier(data);
 
-        for (String group: groupCodes) {
+        List<String> groups = getGroupsForStratifier(stratifier);
+        for (String group: groups) {
             MeasureReportGroupComponent g = getMeasureReportComponent(measureReport.getGroup(), group);
             MeasureGroupComponent gg = getMeasureReportComponent(measure.getGroup(), group);
             if (g == null || gg == null) {
@@ -427,7 +374,10 @@ public class CsvToReportConverter extends AbstractConverter {
             // This row identifies a unique stratum within the group that it occupies, create it.
             StratifierGroupComponent stratum = s.addStratum();
             encodeStratum(data, ss, stratum);
-            setMeasureScore(stratum.getMeasureScore(), getDatumAtColumn(data, group));
+            String value = getDatumAtColumn(data, group);
+            if (value != null) {
+                Util.setQuantityToString(stratum.getMeasureScore(), value);
+            }
             updateStrataPopulations(data, g, stratum);
         }
     }
@@ -460,9 +410,23 @@ public class CsvToReportConverter extends AbstractConverter {
         }
         return null;
     }
+
+
+    private List<String> getGroupsForStratifier(String stratifier) {
+        // Search the measure for each stratifier that matches
+        List<String> groups = new ArrayList<>();
+        for (MeasureGroupComponent g: measure.getGroup()) {
+            if (g.getStratifier().stream().anyMatch(s -> Util.stringMatchesCodeableConcept(stratifier, s.getCode()))) {
+                Coding coding = g.getCode().getCodingFirstRep();
+                groups.add(String.format("%s#%s", coding.hasSystem() ? coding.getSystem() : "", coding.getCode()));
+            }
+        }
+        return groups;
+    }
+
     private boolean hasStratum(MeasureGroupStratifierComponent comp, String s) {
         for (MeasureGroupStratifierComponentComponent c: comp.getComponent()) {
-            if (c.getCode().getCoding().stream().anyMatch(coding -> Util.stringMatchesCoding(s, coding))) {
+            if (Util.stringMatchesCodeableConcept(s, c.getCode())) {
                 return true;
             }
         }
@@ -533,7 +497,7 @@ public class CsvToReportConverter extends AbstractConverter {
             StratifierGroupPopulationComponent pop = stratum.addPopulation();
             pop.setCode(p.getCode());
             String value = getDatumAtColumn(data, population);
-            setCount(pop.getCountElement(), value);
+            Util.setIntegerToString(pop.getCountElement(), value);
         }
     }
 
@@ -543,7 +507,7 @@ public class CsvToReportConverter extends AbstractConverter {
             if (cc == null) {
                 continue;
             }
-            if (cc.getCoding().stream().anyMatch(c -> Util.stringMatchesCoding(code, c))) {
+            if (Util.stringMatchesCodeableConcept(code, cc)) {
                 return item;
             }
         }

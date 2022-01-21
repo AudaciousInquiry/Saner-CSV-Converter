@@ -174,7 +174,7 @@ public class ReportToCsvConverter extends AbstractConverter {
 
     public void setSimplifyCodes(boolean simplify) {
         if (simplify) {
-            setConverter(this::simplifyingConverter);
+            setConverter(AbstractConverter::simplifyingConverter);
         } else {
             setConverter(null);
         }

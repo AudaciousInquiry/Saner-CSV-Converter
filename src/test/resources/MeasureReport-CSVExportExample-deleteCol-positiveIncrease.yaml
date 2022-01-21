@@ -95,12 +95,6 @@ group:
           - system: "http://terminology.hl7.org/CodeSystem/measure-population"
             code: "denominator"
         count: 938
-      - code:
-          coding:
-          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
-            code: "positiveIncrease"
-          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
-            code: "numerator"
       measureScore:
         value: 57.36
         unit: "%"
@@ -141,12 +135,6 @@ group:
           - system: "http://terminology.hl7.org/CodeSystem/measure-population"
             code: "denominator"
         count: 919
-      - code:
-          coding:
-          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
-            code: "positiveIncrease"
-          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
-            code: "numerator"
       measureScore:
         value: 54.19
         unit: "%"
@@ -187,12 +175,6 @@ group:
           - system: "http://terminology.hl7.org/CodeSystem/measure-population"
             code: "denominator"
         count: 2987
-      - code:
-          coding:
-          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
-            code: "positiveIncrease"
-          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
-            code: "numerator"
       measureScore:
         value: 55.94
         unit: "%"
@@ -233,12 +215,6 @@ group:
           - system: "http://terminology.hl7.org/CodeSystem/measure-population"
             code: "denominator"
         count: 2739
-      - code:
-          coding:
-          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
-            code: "positiveIncrease"
-          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
-            code: "numerator"
       measureScore:
         value: 55.57
         unit: "%"
@@ -284,12 +260,6 @@ group:
           - system: "http://terminology.hl7.org/CodeSystem/measure-population"
             code: "denominator"
         count: 923
-      - code:
-          coding:
-          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
-            code: "positiveIncrease"
-          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
-            code: "numerator"
       measureScore:
         value: 60.35
         unit: "%"
@@ -330,12 +300,6 @@ group:
           - system: "http://terminology.hl7.org/CodeSystem/measure-population"
             code: "denominator"
         count: 970
-      - code:
-          coding:
-          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
-            code: "positiveIncrease"
-          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
-            code: "numerator"
       measureScore:
         value: 57.22
         unit: "%"
@@ -376,12 +340,6 @@ group:
           - system: "http://terminology.hl7.org/CodeSystem/measure-population"
             code: "denominator"
         count: 2649
-      - code:
-          coding:
-          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
-            code: "positiveIncrease"
-          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
-            code: "numerator"
       measureScore:
         value: 56.74
         unit: "%"
@@ -422,12 +380,6 @@ group:
           - system: "http://terminology.hl7.org/CodeSystem/measure-population"
             code: "denominator"
         count: 3041
-      - code:
-          coding:
-          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
-            code: "positiveIncrease"
-          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
-            code: "numerator"
       measureScore:
         value: 53.07
         unit: "%"

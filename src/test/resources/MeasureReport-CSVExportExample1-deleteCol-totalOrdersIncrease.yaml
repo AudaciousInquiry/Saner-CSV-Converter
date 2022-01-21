@@ -78,12 +78,6 @@ group:
       - code:
           coding:
           - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
-            code: "totalOrdersIncrease"
-          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
-            code: "initial-population"
-      - code:
-          coding:
-          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
             code: "totalTestResultsIncrease"
           - system: "http://terminology.hl7.org/CodeSystem/measure-population"
             code: "denominator"
@@ -118,12 +112,6 @@ group:
           - system: "http://example.com/foo"
             code: "male"
       population:
-      - code:
-          coding:
-          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
-            code: "totalOrdersIncrease"
-          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
-            code: "initial-population"
       - code:
           coding:
           - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
@@ -164,12 +152,6 @@ group:
       - code:
           coding:
           - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
-            code: "totalOrdersIncrease"
-          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
-            code: "initial-population"
-      - code:
-          coding:
-          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
             code: "totalTestResultsIncrease"
           - system: "http://terminology.hl7.org/CodeSystem/measure-population"
             code: "denominator"
@@ -204,12 +186,6 @@ group:
           - system: "http://example.com/foo"
             code: "male"
       population:
-      - code:
-          coding:
-          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
-            code: "totalOrdersIncrease"
-          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
-            code: "initial-population"
       - code:
           coding:
           - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
@@ -255,12 +231,6 @@ group:
       - code:
           coding:
           - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
-            code: "totalOrdersIncrease"
-          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
-            code: "initial-population"
-      - code:
-          coding:
-          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
             code: "totalTestResultsIncrease"
           - system: "http://terminology.hl7.org/CodeSystem/measure-population"
             code: "denominator"
@@ -295,12 +265,6 @@ group:
           - system: "http://example.com/foo"
             code: "ethnicity-2"
       population:
-      - code:
-          coding:
-          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
-            code: "totalOrdersIncrease"
-          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
-            code: "initial-population"
       - code:
           coding:
           - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
@@ -341,12 +305,6 @@ group:
       - code:
           coding:
           - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
-            code: "totalOrdersIncrease"
-          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
-            code: "initial-population"
-      - code:
-          coding:
-          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
             code: "totalTestResultsIncrease"
           - system: "http://terminology.hl7.org/CodeSystem/measure-population"
             code: "denominator"
@@ -381,12 +339,6 @@ group:
           - system: "http://example.com/foo"
             code: "ethnicity-2"
       population:
-      - code:
-          coding:
-          - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"
-            code: "totalOrdersIncrease"
-          - system: "http://terminology.hl7.org/CodeSystem/measure-population"
-            code: "initial-population"
       - code:
           coding:
           - system: "http://hl7.org/fhir/uv/saner/CodeSystem/MeasuredValues"

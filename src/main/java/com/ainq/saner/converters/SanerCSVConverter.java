@@ -138,8 +138,8 @@ public class SanerCSVConverter {
      * @param measureReport The FHIR MeasureReport to convert.
      * @param orderedHeaderMap The map from canonical headers to output header names.  Fields are reported in the order that map.entries() returns keys. See {@link java.util.LinkedHashMap}.
      * @param csvOutput The place to store the CSV Output
-     * @param simplify
-     * @throws CSVConversionException
+     * @param simplify If true, simplify codes in strata on output, if false, report a system#code
+     * @throws CSVConversionException   On errors converting to CSV Format
      */
     public static void convertMeasureReportToCSV(MeasureReport measureReport, Map<String, String> orderedHeaderMap, Writer csvOutput, boolean simplify) {
         ReportToCsvConverter converter = new ReportToCsvConverter(csvOutput, measureReport, orderedHeaderMap);
@@ -147,6 +147,16 @@ public class SanerCSVConverter {
         converter.convert();
     }
 
+    /**
+     * Convert a CSV to a MeasureReport
+     * @param r A reader that accesses the CSV Content
+     * @param measure   The measure embodied in the CSV File
+     * @param subject   The subject to associate with the MeasureReport
+     * @param orderedHeaderMap  A map describing how columns are produced from groups, population and strata in the measure
+     * @param codeConverter A function which converts simplified strings (see simplify in convertMeasureReportToCSV) to proper values
+     * @return  The CSV as a MeasureReport resource
+     * @throws IOException  On errors reading the CSV file
+     */
     public static MeasureReport convertCSVToMeasureReport(
         Reader r, Measure measure, Reference subject, Map<String, String> orderedHeaderMap, UnaryOperator<String> codeConverter) throws IOException {
         CsvToReportConverter converter = new CsvToReportConverter(measure, subject, orderedHeaderMap);
