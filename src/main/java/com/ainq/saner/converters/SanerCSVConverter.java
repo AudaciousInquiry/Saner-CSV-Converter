@@ -64,6 +64,8 @@ public class SanerCSVConverter {
                 writeMeasureReport(new FileWriter(outputFile), mr);
                 csvFile = null;
                 columns.clear();
+            } else if ("--help".equals(arg) || "-h".equals(arg)) {
+                usage();
             } else if (arg.contains("=")) {
                 String[] parts = arg.split("=");
                 columns.put(parts[0], parts.length > 1 ? parts[1] : "");
@@ -87,6 +89,18 @@ public class SanerCSVConverter {
 
         System.out.printf("%d errors%n", errors);
         System.exit(errors);
+    }
+
+    private static void usage() {
+        System.out.printf("Usage:%n"
+            + "\tjava %s [code=columnName]* (measureReport.{xml|json} | measureReport.csv measure.{xml|json})%n%n"
+            + "Where:%n"
+            + "\tcode=columnName Maps the measureReport count or measureScore%n"
+            + "\t                identified by code to the specified column%n%n"
+            + "\tmeasureReport.{xml|json} is a MeasureReport resource to convert to CSV%n"
+            + "\tmeasureReport.csv is a converted CSV File%n"
+            + "\tmeasure.{xml|json} is a Measure resource that defines how a MeasureReport will be generated",
+                SanerCSVConverter.class.getName() );
     }
 
     protected static <R extends Resource> R getResource(Class<R> cz, File f) throws IOException {
