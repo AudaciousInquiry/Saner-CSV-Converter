@@ -161,6 +161,7 @@ public class ReportToCsvConverter extends AbstractConverter {
         }
         writeRow(headers);
         generateDataRows().forEach(this::writeRow);
+        this.csvOutput.close();
     }
 
     private void remapRow(List<String> headers) {
